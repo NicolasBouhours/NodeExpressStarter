@@ -23,6 +23,7 @@
     "compression": "^1.7.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
+    "debug": "^2.6.9",
     "dotenv": "^4.0.0",
     "express": "^4.15.4",
     "express-validation": "^1.0.2",
@@ -31,7 +32,9 @@
     "http-status": "^1.0.1",
     "joi": "^11.0.3",
     "method-override": "^2.3.9",
+    "mongoose": "^4.11.12",
     "morgan": "^1.8.2",
+    "util": "^0.10.3",
     "winston": "^2.3.1"
   }
 }
