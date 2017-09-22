@@ -10,8 +10,9 @@ const expressWinston = require('express-winston');
 const expressValidation = require('express-validation');
 const helmet = require('helmet');
 
-const config = require ('./config');
-const winstonInstance = require ('./winston');
+const config = require('./config');
+const winstonInstance = require('./winston');
+const router = require('../server/routes')
 
 const app = express();
 
@@ -46,9 +47,7 @@ if (config.env === 'development') {
 }
 
 // Mount routes
-app.get('/', (req, res) => {
-  res.send('Hello World !')
-})
+app.use('/api', router);
 
 // log error in winston transports except when executing test suite
 if (config.env !== 'test') {
