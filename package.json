@@ -1,0 +1,23 @@
+{
+  "name": "nodeexpressstarter",
+  "version": "0.0.1",
+  "description": "A node and express starter",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NicolasBouhours/NodeExpressStarter.git"
+  },
+  "author": "Nicolas Bouhours",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NicolasBouhours/NodeExpressStarter/issues"
+  },
+  "homepage": "https://github.com/NicolasBouhours/NodeExpressStarter#readme",
+  "dependencies": {
+    "express": "^4.15.4"
+  }
+}
