@@ -34,10 +34,10 @@ const UserSchema = new mongoose.Schema({
  * Crypt password before insert on database
  * @returns {}
  */
-UserSchema.pre('save', function (next) { // eslint-disable-line func-names
+UserSchema.pre('save', function (next) { // eslint-disable-line func-names, consistent-return
   const user = this;
   if (this.isModified('password') || this.isNew) {
-    bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.genSalt(10, (err, salt) => { // eslint-disable-line consistent-return
       if (err) {
         return next(err);
       }
@@ -48,10 +48,10 @@ UserSchema.pre('save', function (next) { // eslint-disable-line func-names
         user.password = hash;
         return next();
       });
-      return next();
     });
+  } else {
+    return next();
   }
-  return next();
 });
 
 /**
