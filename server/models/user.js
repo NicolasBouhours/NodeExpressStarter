@@ -33,8 +33,12 @@ const UserSchema = new mongoose.Schema({
 /**
  * Methods
  */
- // Crypt password before inserting it on database
- UserSchema.pre('save', (next) => {
+
+ /**
+  * Crypt password before insert on database
+  * @returns {}
+  */
+ UserSchema.pre('save', function(next) {
    var user = this;
    if (this.isModified('password') || this.isNew) {
      bcrypt.genSalt(10, (err, salt) => {
@@ -54,13 +58,22 @@ const UserSchema = new mongoose.Schema({
    }
  });
 
- // Compare password input to password saved in database
- UserSchema.methods.comparePassword = (pw, cb) => {
-   bcrypt.compare(pw, this.password, (err, isMatch) => {
-     if (err) {
-       return cb(err);
-     }
-     cb(null, isMatch);
+ /**
+  * Compare password input to password saved in database
+  * @param {Password} string - The user password
+  * @param {Callback} function - The callback executed.
+  * @returns {Promise<boolean>}
+  */
+ UserSchema.methods.comparePassword = function (pw) {
+   return new Promise((resolve, reject) => {
+     console.log('PW', pw);
+     console.log('password', this.password);
+     bcrypt.compare(pw, this.password, (err, isMatch) => {
+       if (err) {
+         reject(err);
+       }
+       resolve(isMatch);
+     });
    });
  };
 
