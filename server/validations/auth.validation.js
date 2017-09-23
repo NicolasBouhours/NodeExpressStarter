@@ -15,6 +15,6 @@ const authValidation = {
       lastName: Joi.string().required()
     }
   }
-}
+};
 
-module.exports = authValidation
+module.exports = authValidation;

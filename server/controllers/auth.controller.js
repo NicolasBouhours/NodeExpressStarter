@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 const APIError = require('../helpers/APIError');
 const config = require('../../config/config');
-const User = require('../models/User');
+const User = require('../models/user');
 
 /**
  * Create user if email, password, firstName and lastName are correct
@@ -13,14 +13,19 @@ const User = require('../models/User');
  * @returns {User}
  */
 const register = async (req, res, next) => {
-  const { email, password, firstName, lastName } = req.body;
+  const {
+    email,
+    password,
+    firstName,
+    lastName
+  } = req.body;
 
   try {
-    const existingUser = await User.findOne({ email: email});
+    const existingUser = await User.findOne({ email });
 
     // Check if email is not already registered
     if (!existingUser) {
-      let newUser = new User({
+      const newUser = new User({
         email,
         password,
         firstName,
@@ -28,19 +33,18 @@ const register = async (req, res, next) => {
       });
 
       // Save user on database
-      const user = await newUser.save();
-      res.json({
+      await newUser.save();
+      return res.json({
         success: true,
         message: 'User successfully created'
       });
-    } else {
-      const err = new APIError('This email already exist', httpStatus.BAD_REQUEST, true);
-      return next(err);
     }
+    const err = new APIError('This email already exist', httpStatus.BAD_REQUEST, true);
+    return next(err);
   } catch (error) {
-    next(error);
+    return next(error);
   }
-}
+};
 
 /**
  * Return jwt token if valid email and password
@@ -52,7 +56,7 @@ const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email: email});
+    const user = await User.findOne({ email });
 
     // If user exist
     if (user) {
@@ -60,31 +64,29 @@ const login = async (req, res, next) => {
       const passwordMatch = await user.comparePassword(password);
 
       // Sign jwt token
-      if(passwordMatch) {
+      if (passwordMatch) {
         const token = jwt.sign({
           id: user.id
         }, config.jwtSecret, {
-          expiresIn: "2 days"
+          expiresIn: '2 days'
         });
         return res.json({
           success: true,
           message: 'Authenticated successfully',
           token
         });
-      } else {
-        const err = new APIError('Bad credentials', httpStatus.UNAUTHORIZED, true);
-        return next(err);
       }
-    } else {
-      const err = new APIError('Unknow user', httpStatus.UNAUTHORIZED, true);
+      const err = new APIError('Bad credentials', httpStatus.UNAUTHORIZED, true);
       return next(err);
     }
+    const err = new APIError('Unknow user', httpStatus.UNAUTHORIZED, true);
+    return next(err);
   } catch (error) {
-    next(error);
+    return next(error);
   }
-}
+};
 
 module.exports = {
   register,
   login
-}
+};

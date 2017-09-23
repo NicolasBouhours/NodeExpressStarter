@@ -34,48 +34,46 @@ const UserSchema = new mongoose.Schema({
  * Methods
  */
 
- /**
-  * Crypt password before insert on database
-  * @returns {}
-  */
- UserSchema.pre('save', function(next) {
-   var user = this;
-   if (this.isModified('password') || this.isNew) {
-     bcrypt.genSalt(10, (err, salt) => {
-       if (err) {
-         return next(err);
-       }
-       bcrypt.hash(user.password, salt, (err, hash) => {
-         if (err) {
-           return next(err);
-         }
-         user.password = hash;
-         next();
-       });
-     });
-   } else {
-     return next();
-   }
- });
+/**
+ * Crypt password before insert on database
+ * @returns {}
+ */
+UserSchema.pre('save', function (next) {
+  const user = this;
+  if (this.isModified('password') || this.isNew) {
+    bcrypt.genSalt(10, (err, salt) => {
+      if (err) {
+        return next(err);
+      }
+      bcrypt.hash(user.password, salt, (hashErr, hash) => {
+        if (hashErr) {
+          return next(hashErr);
+        }
+        user.password = hash;
+        return next();
+      });
+      return next();
+    });
+  }
+  return next();
+});
 
- /**
-  * Compare password input to password saved in database
-  * @param {Password} string - The user password
-  * @param {Callback} function - The callback executed.
-  * @returns {Promise<boolean>}
-  */
- UserSchema.methods.comparePassword = function (pw) {
-   return new Promise((resolve, reject) => {
-     console.log('PW', pw);
-     console.log('password', this.password);
-     bcrypt.compare(pw, this.password, (err, isMatch) => {
-       if (err) {
-         reject(err);
-       }
-       resolve(isMatch);
-     });
-   });
- };
+/**
+ * Compare password input to password saved in database
+ * @param {Password} string - The user password
+ * @param {Callback} function - The callback executed.
+ * @returns {Promise<boolean>}
+ */
+UserSchema.methods.comparePassword = function (pw) {
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(pw, this.password, (err, isMatch) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(isMatch);
+    });
+  });
+};
 
 /**
  * Statics

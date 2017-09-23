@@ -23,7 +23,7 @@ if (config.MONGOOSE_DEBUG) {
 // module.parent is required for mocha watch feature
 if (!module.parent) {
   app.listen(config.port, () => {
-    console.info(`Server started on port ${config.port} (${config.env})`);
+    console.info(`Server started on port ${config.port} (${config.env})`); // eslint-disable-line no-console
   });
 }
 

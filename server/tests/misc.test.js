@@ -3,7 +3,7 @@ const httpStatus = require('http-status');
 const chai = require('chai');
 const app = require('../../index');
 
-const expect = chai.expect;
+const { expect } = chai;
 
 chai.config.includeStack = true;
 
