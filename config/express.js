@@ -9,9 +9,11 @@ const httpStatus = require('http-status');
 const expressWinston = require('express-winston');
 const expressValidation = require('express-validation');
 const helmet = require('helmet');
+const passport = require('passport');
 
 const config = require('./config');
 const winstonInstance = require('./winston');
+const passportConfig = require('./passport');
 const router = require('../server/routes');
 const APIError = require('../server/helpers/APIError');
 
@@ -46,6 +48,10 @@ if (config.env === 'development') {
     colorStatus: true
   }));
 }
+
+// Init passport
+app.use(passport.initialize());
+passportConfig(passport);
 
 // Mount routes
 app.use('/api', router);
